@@ -1,0 +1,66 @@
+[
+	{
+		"id": "107fb5b75607497b96722bda5b504926",
+		"title": "Kanap Sinopé",
+		"price": 100,
+		"description": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+		"image": "../../back/images/kanap01.jpeg",
+		"colors": ["Blue", "White", "Black"]
+	},
+	{
+		"id": "415b7cacb65d43b2b5c1ff70f3393ad1",
+		"title": "Kanap Cyllène",
+		"price": 120,
+		"description": "Morbi nec erat aliquam, sagittis urna non, laoreet justo. Etiam sit amet interdum diam, at accumsan lectus.",
+		"image": "../../back/images/kanap02.jpeg",
+		"colors": ["Black/Yellow", "Black/Red"]
+	},
+	{
+		"id": "055743915a544fde83cfdfc904935ee7",
+		"title": "Kanap Calycé",
+		"price": 110,
+		"description": "Pellentesque fermentum arcu venenatis ex sagittis accumsan. Vivamus lacinia fermentum tortor.Mauris imperdiet tellus ante.",
+		"image": "../../back/images/kanap03.jpeg",
+		"colors": ["Green", "Red", "Orange"]
+	},
+	{
+		"id": "a557292fe5814ea2b15c6ef4bd73ed83",
+		"title": "Kanap Autonoé",
+		"price": 130,
+		"description": "Donec mattis nisl tortor, nec blandit sapien fermentum at. Proin hendrerit efficitur fringilla. Lorem ipsum dolor sit amet.",
+		"image": "../../back/images/kanap04.jpeg",
+		"colors": ["Pink", "White"]
+	},
+	{
+		"id": "8906dfda133f4c20a9d0e34f18adcf06",
+		"title": "Kanap Eurydomé",
+		"price": 140,
+		"description": "Ut laoreet vulputate neque in commodo. Suspendisse maximus quis erat in sagittis. Donec hendrerit purus at congue aliquam.",
+		"image": "../../back/images/kanap05.jpeg",
+		"colors": ["Gray", "Purple", "Blue"]
+	},
+	{
+		"id": "77711f0e466b4ddf953f677d30b0efc9",
+		"title": "Kanap Hélicé",
+		"price": 150,
+		"description": "Curabitur vel augue sit amet arcu aliquet interdum. Integer vel quam mi. Morbi nec vehicula mi, sit amet vestibulum.",
+		"image": "../../back/images/kanap06.jpeg",
+		"colors": ["Grey", "Navy"]
+	},
+	{
+		"id": "034707184e8e4eefb46400b5a3774b5f",
+		"title": "Kanap Thyoné",
+		"price": 160,
+		"description": "Mauris imperdiet tellus ante, sit amet pretium turpis molestie eu. Vestibulum et egestas eros. Vestibulum non lacus orci.",
+		"image": "../../back/images/kanap07.jpeg",
+		"colors": ["Red", "Silver"]
+	},
+	{
+		"id": "a6ec5b49bd164d7fbe10f37b6363f9fb",
+		"title": "Kanap orthosie",
+		"price": 170,
+		"description": "Mauris molestie laoreet finibus. Aenean scelerisque convallis lacus at dapibus. Morbi imperdiet enim metus rhoncus.",
+		"image": "../../back/images/kanap08.jpeg",
+		"colors": ["Pink", "Brown", "Yellow", "White"]
+	}
+]

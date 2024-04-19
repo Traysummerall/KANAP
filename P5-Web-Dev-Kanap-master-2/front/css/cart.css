@@ -134,8 +134,6 @@ h2 {
 	box-shadow: rgb(42 18 206 / 90%) 0 0 22px 6px;
 }
 
-
-
 /***************/
 /*Media queries*/
 /***************/
@@ -146,7 +144,7 @@ h2 {
 	}
 }
 
-@media (max-width: 575.98px) { 
+@media (max-width: 575.98px) {
 	.cart__item {
 		flex-direction: column;
 		align-items: center;
@@ -169,4 +167,13 @@ h2 {
 	.cart__order__form {
 		width: 75%;
 	}
+}
+/* Hide the data-product-id attribute visually */
+.itemQuantityInput {
+	/* Any other styles you have */
+}
+
+/* Add this class to hide the data-product-id attribute */
+.hideProductId {
+	display: none;
 }

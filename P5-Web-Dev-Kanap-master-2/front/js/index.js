@@ -21,9 +21,8 @@ function renderProducts(products) {
 		console.error('Product container not found');
 		return;
 	}
-	productContainer.innerHTML = ''; // Clear previous content
+	productContainer.innerHTML = '';
 
-	// Loop through each product and create HTML elements
 	products.forEach((product) => {
 		const productElement = document.createElement('div');
 		productElement.classList.add('product');

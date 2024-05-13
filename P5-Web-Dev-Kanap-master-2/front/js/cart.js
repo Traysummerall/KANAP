@@ -5,6 +5,11 @@ document.addEventListener('DOMContentLoaded', async function () {
 	const orderForm = document.getElementById('orderForm');
 	const orderBtn = document.getElementById('orderBtn');
 
+	// Define regular expressions for input validation
+	const nameRegex = /^[a-zA-Z]+$/; // Only alphabets allowed in name fields
+	const emailRegex = /^\S+@\S+\.\S+$/; // Email format validation
+	const cityRegex = /^[a-zA-Z\s]*$/; // Only alphabets and spaces allowed in city field
+
 	// Function to fetch product details from the backend API
 	async function fetchProductDetails(productId) {
 		try {
@@ -18,6 +23,17 @@ document.addEventListener('DOMContentLoaded', async function () {
 			console.error('Error fetching product details:', error.message);
 			return null;
 		}
+	}
+
+	// Function to validate input fields using regex
+	function validateInput(inputValue, regex) {
+		return regex.test(inputValue);
+	}
+
+	// Function to display error message for input field
+	function displayErrorMessage(inputField, message) {
+		const errorMsgElement = inputField.nextElementSibling; // Assuming error message is next to input field
+		errorMsgElement.textContent = message;
 	}
 
 	// Function to update cart items on the page
@@ -41,11 +57,14 @@ document.addEventListener('DOMContentLoaded', async function () {
 		for (const item of cartItems) {
 			const product = await fetchProductDetails(item.productId);
 			if (product) {
-				totalQuantity += item.quantity;
-				totalPrice += item.quantity * product.price;
+				if (item.quantity > 0) {
+					// Only add items with quantity > 0
+					totalQuantity += item.quantity;
+					totalPrice += item.quantity * product.price;
 
-				const cartItem = createCartItemElement(item, product);
-				cartItemsContainer.appendChild(cartItem);
+					const cartItem = createCartItemElement(item, product);
+					cartItemsContainer.appendChild(cartItem);
+				}
 			}
 		}
 
@@ -67,18 +86,23 @@ document.addEventListener('DOMContentLoaded', async function () {
                 <p>Color: ${item.color}</p>
                 <p>Price: €${product.price}</p>
                 <!-- Quantity input field -->
-                <div class="item__content__settings__quantity">
-                    <label for="itemQuantity-${item.productId}">Quantity:</label>
-                    <input
-                        type="number"
-                        name="itemQuantity"
-                        min="0"
-                        max="100"
-                        value="${item.quantity}"
-                        id="itemQuantity-${item.productId}"
-                        data-product-id="${item.productId}"
-                        class="itemQuantityInput"
-                    />
+                <div class="item__content__settings">
+                    <div class="item__content__settings__quantity">
+                        <label for="itemQuantity-${item.productId}">Quantity:</label>
+                        <input
+                            type="number"
+                            name="itemQuantity"
+                            min="0"
+                            max="100"
+                            value="${item.quantity}"
+                            id="itemQuantity-${item.productId}"
+                            data-product-id="${item.productId}"
+                            class="itemQuantityInput"
+                        />
+                    </div>
+                    <!-- Delete button -->
+                    <button class="deleteBtn" style="background: none; border: none; color: white; font-family: 'Montserrat', sans-serif; font-size: 16px; margin-top: 5px; margin-left: -5px;"
+                        data-product-id="${item.productId}">Delete</button>
                 </div>
             </div>
         `;
@@ -102,21 +126,43 @@ document.addEventListener('DOMContentLoaded', async function () {
 		true
 	); // Use capturing to ensure blur event is caught before focusout
 
+	// Event listener for delete button clicks
+	cartItemsContainer.addEventListener('click', function (event) {
+		if (event.target.classList.contains('deleteBtn')) {
+			const productId = event.target.dataset.productId;
+			deleteCartItem(productId);
+		}
+	});
+
 	// Function to update the quantity of an item in the cart and cart totals
 	function updateCartItemQuantity(productId, newQuantity) {
 		const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
 
-		// Find the item in the cart and update its quantity
-		cartItems.forEach((item) => {
-			if (item.productId === productId) {
-				item.quantity = newQuantity;
+		// Find the item in the cart
+		const foundItemIndex = cartItems.findIndex((item) => item.productId === productId);
+
+		if (foundItemIndex !== -1) {
+			// Update the item quantity
+			if (newQuantity <= 0) {
+				// If new quantity is zero or negative, remove the item from the cart
+				cartItems.splice(foundItemIndex, 1);
+			} else {
+				cartItems[foundItemIndex].quantity = newQuantity;
 			}
-		});
 
-		localStorage.setItem('cart', JSON.stringify(cartItems));
+			localStorage.setItem('cart', JSON.stringify(cartItems));
 
-		// Update cart items and totals
-		updateCartItems();
+			// Update cart items and totals
+			updateCartItems();
+		}
+	}
+
+	// Function to delete a cart item by product ID
+	function deleteCartItem(productId) {
+		const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+		const updatedCartItems = cartItems.filter((item) => item.productId !== productId);
+		localStorage.setItem('cart', JSON.stringify(updatedCartItems));
+		updateCartItems(); // Update the cart display after deletion
 	}
 
 	// Function to generate a random order ID (for simulation purposes)
@@ -128,17 +174,58 @@ document.addEventListener('DOMContentLoaded', async function () {
 	orderForm.addEventListener('submit', async function (event) {
 		event.preventDefault(); // Prevent default form submission behavior
 
-		// Perform the order submission logic here (e.g., send data to the server)
-		// This example just logs the form data to console
-		const formData = new FormData(orderForm);
-		const orderData = {};
-		formData.forEach((value, key) => {
-			orderData[key] = value;
-		});
-		console.log('Order data:', orderData);
+		// Validate form fields
+		const firstNameInput = document.getElementById('firstName');
+		const lastNameInput = document.getElementById('lastName');
+		const addressInput = document.getElementById('address');
+		const cityInput = document.getElementById('city');
+		const emailInput = document.getElementById('email');
 
-		// Simulate order confirmation and redirect to confirmation page
-		const orderId = generateOrderId(); // You can replace this with actual order ID from the server
-		window.location.href = `confirmation.html?orderId=${orderId}`;
+		let isValid = true; // Flag to track overall form validation
+
+		if (!validateInput(firstNameInput.value, nameRegex)) {
+			displayErrorMessage(firstNameInput, 'Please enter a valid first name.');
+			isValid = false;
+		} else {
+			displayErrorMessage(firstNameInput, ''); // Clear error message if valid
+		}
+
+		if (!validateInput(lastNameInput.value, nameRegex)) {
+			displayErrorMessage(lastNameInput, 'Please enter a valid last name.');
+			isValid = false;
+		} else {
+			displayErrorMessage(lastNameInput, ''); // Clear error message if valid
+		}
+
+		if (!validateInput(emailInput.value, emailRegex)) {
+			displayErrorMessage(emailInput, 'Please enter a valid email address.');
+			isValid = false;
+		} else {
+			displayErrorMessage(emailInput, ''); // Clear error message if valid
+		}
+
+		if (!validateInput(cityInput.value, cityRegex)) {
+			displayErrorMessage(
+				cityInput,
+				'Please enter a valid city name (only alphabets and spaces allowed).'
+			);
+			isValid = false;
+		} else {
+			displayErrorMessage(cityInput, ''); // Clear error message if valid
+		}
+
+		// If form is valid, proceed with order submission
+		if (isValid) {
+			const formData = new FormData(orderForm);
+			const orderData = {};
+			formData.forEach((value, key) => {
+				orderData[key] = value;
+			});
+			console.log('Order data:', orderData);
+
+			// Simulate order confirmation and redirect to confirmation page
+			const orderId = generateOrderId(); // You can replace this with actual order ID from the server
+			window.location.href = `confirmation.html?orderId=${orderId}`;
+		}
 	});
 });
